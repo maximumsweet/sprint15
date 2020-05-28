@@ -13,3 +13,6 @@ dist
 # Optional REPL history
 .DS_Store
 .idea
+
+#JWT-key
+.env

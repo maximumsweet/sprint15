@@ -7,7 +7,7 @@ const userModel = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const BadRequestError = require('../errors/bad-request-error');
 
-const superSecretKey = require('../secret');
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const { ObjectId } = mongoose.Types;
 
@@ -16,7 +16,7 @@ module.exports.login = (req, res, next) => {
 
   return userModel.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, superSecretKey, { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
 
       res.cookie('jwt', token, {
         maxAge: 604800,
