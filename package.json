@@ -1,13 +1,12 @@
 {
   "name": "sprint_15",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Project work 15 yandex.praktikum.",
   "main": "app.js",
   "scripts": {
     "dev": "nodemon app.js",
     "start": "node app.js"
   },
-  "keywords": [],
   "author": "Maksim Slyunkov",
   "license": "ISC",
   "devDependencies": {
@@ -19,10 +18,15 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "celebrate": "^12.1.1",
     "express": "^4.17.1",
+    "express-winston": "^4.0.3",
+    "joi": "^14.3.1",
+    "joi-objectid": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.14",
     "mongoose-validator": "^2.1.0",
-    "validator": "^13.0.0"
+    "validator": "^13.0.0",
+    "winston": "^3.2.1"
   }
 }
