@@ -18,13 +18,7 @@ module.exports.createCard = (req, res, next) => {
   const { _id } = req.user;
 
   cardModel.create({ name, link, owner: _id })
-    .then((card) => {
-      if (!card) {
-        throw new BadRequestError('Ошибка валидации');
-      } else {
-        res.status(200).send({ data: card });
-      }
-    })
+    .then((card) => res.status(200).send({ data: card }))
     .catch(next);
 };
 
@@ -42,7 +36,7 @@ module.exports.deleteCard = (req, res, next) => {
       } else if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Невозможно удалить чужую карточку');
       } else {
-        cardModel.findByIdAndRemove(cardId)
+        cardModel.remove(cardId)
           .then(() => res.status(200).send({ data: card }))
           .catch(next);
       }

@@ -42,7 +42,7 @@ module.exports.getUser = (req, res, next) => {
     throw new BadRequestError({ message: 'Невалидный id' });
   }
 
-  userModel.findById({ _id: id })
+  userModel.findById(id)
     .then((user) => {
       if (!user) {
         throw new NotFoundError({ message: 'Нет пользователя с таким id' });
@@ -57,10 +57,6 @@ module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-
-  if (password.length < 8) {
-    throw new BadRequestError({ message: 'Пароль должен содержать как минимум 6 символов' });
-  }
 
   bcrypt.hash(password, 10)
     .then((hash) => userModel.create({
