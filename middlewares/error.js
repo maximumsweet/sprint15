@@ -1,10 +1,16 @@
 /* eslint-disable no-unused-vars */
-module.exports.resource = (res, req, next) => {
-  next({ status: 404, message: 'Запрашиваемый ресурс не найден' });
-};
-
 module.exports.errorMiddleware = (err, req, res, next) => {
-  const { statusCode = 500, message } = err;
+  const status = err.statusCode || 500;
+  let { message } = err;
 
-  res.status(statusCode).send({ message: statusCode === 500 ? `На сервере произошла ошибка ${statusCode}.` : `${message} Статус ошибки ${statusCode}.` });
+  if (err.name === 'ValidationError') {
+    return res.status(400).json({ err: `Ошибка валидации:\n${err.message}` });
+  }
+
+  if (status === 500) {
+    message = 'На сервере произошла ошибка';
+  }
+
+  res.status(status).json({ err: message });
+  next();
 };

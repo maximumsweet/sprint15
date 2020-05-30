@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 const { celebrate, Joi } = require('celebrate');
 Joi.objectId = require('joi-objectid')(Joi);
 const NotValid = require('../errors/bad-request-error');
@@ -9,7 +10,7 @@ const createUserCheck = celebrate({
     avatar: Joi
       .string()
       .required()
-      .regex(/^(?! )http(s)?:\/\/(www\.)?((\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|(([a-zA-Z0-9])[.-]?){1,}([a-zA-Z0-9])\.([a-zA-Z]{2,6}))(?::\d{2,5})?(?:[\\/?#]\S*)?/m)
+      .regex(/^((http[s]?|ftp):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)(.*)?(#[\w\-]+)?$/m)
       .error(new NotValid('Поле avatar должно содержать ссылку')),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
@@ -22,7 +23,7 @@ const createCardCheck = celebrate({
     link: Joi
       .string()
       .required()
-      .regex(/^(?! )http(s)?:\/\/(www\.)?((\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|(([a-zA-Z0-9])[.-]?){1,}([a-zA-Z0-9])\.([a-zA-Z]{2,6}))(?::\d{2,5})?(?:[\\/?#]\S*)?/m)
+      .regex(/^((http[s]?|ftp):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)(.*)?(#[\w\-]+)?$/m)
       .error(new NotValid('Поле link должно содержать ссылку')),
   }),
 });

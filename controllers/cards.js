@@ -1,11 +1,6 @@
-const mongoose = require('mongoose');
-
 const cardModel = require('../models/card');
-const BadRequestError = require('../errors/bad-request-error');
 const NotFoundError = require('../errors/not-found-error');
 const ForbiddenError = require('../errors/forbidden-error');
-
-const { ObjectId } = mongoose.Types;
 
 module.exports.getCards = (req, res, next) => {
   cardModel.find({})
@@ -22,24 +17,26 @@ module.exports.createCard = (req, res, next) => {
     .catch(next);
 };
 
+module.exports.getCard = (req, res, next) => cardModel.findById({
+  _id: req.params.cardId,
+})
+  .then((card) => {
+    if (!card) {
+      throw new NotFoundError(`Карточка с id ${req.params.cardId} не найдена`);
+    }
+    next();
+  })
+  .catch(next);
+
 module.exports.deleteCard = (req, res, next) => {
-  const { cardId } = req.params;
-
-  if (!ObjectId.isValid(cardId)) {
-    throw new BadRequestError('Невалидный id');
-  }
-
-  cardModel.findById(cardId)
-    .then((card) => {
-      if (!card) {
-        throw new NotFoundError(`Карточка с id ${cardId} не найдена`);
-      } else if (card.owner.toString() !== req.user._id) {
+  cardModel.findById(req.params.cardId)
+    .then((cardId) => {
+      if (cardId.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Невозможно удалить чужую карточку');
-      } else {
-        cardModel.remove(cardId)
-          .then(() => res.status(200).send({ data: card }))
-          .catch(next);
       }
+      cardModel.remove(cardId)
+        .then(() => res.status(200).send({ data: cardId }))
+        .catch(next);
     })
     .catch(next);
 };

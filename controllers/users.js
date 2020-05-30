@@ -45,10 +45,9 @@ module.exports.getUser = (req, res, next) => {
   userModel.findById(id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError({ message: 'Нет пользователя с таким id' });
-      } else {
-        res.status(200).send({ data: user });
+        throw new NotFoundError('Нет пользователя с таким id');
       }
+      res.status(200).send({ data: user });
     })
     .catch(next);
 };
@@ -65,5 +64,5 @@ module.exports.createUser = (req, res, next) => {
     .then((user) => res.status(201).send({
       _id: user._id, name: user.name, about: user.about, avatar: user.avatar, email: user.email,
     }))
-    .catch((err) => ((err.name === 'ValidationError') ? new BadRequestError('Ошибка валидации') : next(err)));
+    .catch(next);
 };
